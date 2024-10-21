@@ -34,7 +34,7 @@ export class ParticipantesController {
 
     console.log("Digite os dados para atualizar o participante:\n");
 
-    const cpf = prompt("CPF: ");
+    const cpf = prompt("CPF do participante: ");
     const nome = prompt("Nome: ");
     const celular = prompt("Celular: ");
     const IDEvento = +prompt("ID do evento: ");
