@@ -33,9 +33,11 @@ export async function connectDb() {
     "sql/insert_tables_sistema_eventos.sql",
     "utf-8"
   );
+  const createTrigger = readFileSync("sql/trigger_check_limite.sql", "utf-8")
 
   await executar_sql(createTablesSQL);
   await executar_sql(populateTablesSQL);
+  await executar_sql(createTrigger);
 }
 
 export function disconnectDb() {
