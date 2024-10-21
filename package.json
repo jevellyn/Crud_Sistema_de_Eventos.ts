@@ -2,6 +2,7 @@
   "dependencies": {
     "@types/node": "^22.7.7",
     "fs": "^0.0.1-security",
-    "mysql2": "^3.11.3"
+    "mysql2": "^3.11.3",
+    "prompt-sync": "^4.2.0"
   }
 }
