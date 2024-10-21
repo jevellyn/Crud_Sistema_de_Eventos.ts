@@ -47,7 +47,7 @@ Relatorio
   2 - Participantes p/ evento
   3 - Voltar`);
 
-    const escolha = +prompt("\n-> ");
+    const escolha = +prompt("-> ");
 
     switch (escolha) {
       case 1:
@@ -72,7 +72,7 @@ Entidades
   2 - Evento
   3 - Voltar`);
 
-    const escolha = +prompt("\n-> ");
+    const escolha = +prompt("-> ");
 
     switch (escolha) {
       case 1:

@@ -1,16 +1,16 @@
 import { setTimeout } from "timers/promises";
 import { connectDb, disconnectDb } from "./conexion/connection";
-//import { Menu } from "./utils/menu";
+import { Menu } from "./utils/menu";
 import { prompt } from "./utils/prompt";
 
 async function main() {
   await connectDb();
 
-  //const menu = new Menu();
+  const menu = new Menu();
   let escolha = 0;
 
   while (true) {
-    //menu.menu_principal();
+    await menu.menu_principal();
 
     escolha = +prompt("\n-> ");
 
@@ -26,7 +26,7 @@ async function main() {
       break;
     }
 
-    //await menu.menu_secundario(escolha);
+    await menu.menu_secundario(escolha);
     await setTimeout(200);
   }
 }

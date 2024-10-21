@@ -4,24 +4,28 @@ import { prompt } from "../utils/prompt";
 
 export class ParticipantesController {
   async inserir_participante() {
-    await EventosModel.listar_db();
+    try {
+      await EventosModel.listar_db();
 
-    console.log("Digite os dados para criar o participante:\n");
+      console.log("Digite os dados para criar o participante:\n");
 
-    const cpf = prompt("CPF: ");
-    const nome = prompt("Nome: ");
-    const celular = prompt("Celular: ");
-    const IDEvento = +prompt("ID do evento: ");
+      const cpf = prompt("CPF: ");
+      const nome = prompt("Nome: ");
+      const celular = prompt("Celular: ");
+      const IDEvento = +prompt("ID do evento: ");
 
-    const novoParticipante = new ParticipantesModel({
-      IDEvento,
-      cpf,
-      nome,
-      celular,
-    });
+      const novoParticipante = new ParticipantesModel({
+        IDEvento,
+        cpf,
+        nome,
+        celular,
+      });
 
-    await ParticipantesModel.criar_db(novoParticipante);
-    await ParticipantesModel.listar_db();
+      await ParticipantesModel.criar_db(novoParticipante);
+      await ParticipantesModel.listar_db();
+    } catch (error: any) {
+      console.log("\n" + error.sqlMessage);
+    }
   }
 
   async atualizar_participante() {
