@@ -22,13 +22,18 @@ export class ParticipantesModel implements IParticipantesModel {
     const eventos = await executar_sql(SQL);
     console.table(eventos);
   }
-  //tentei aqui
-  static async count() {
-    const sql = "SELECT COUNT(*) AS participanteQtd FROM PARTICIPANTES";
-    const result = await executar_sql(sql);
-    return result;
+
+  static async listar_compromisso(cpf: string) {
+    const SQL = `SELECT * FROM participante_evento WHERE PARTICIPANTE_CPF = "${cpf}"`;
+    const eventos = await executar_sql(SQL);
+    return eventos;
   }
-  
+
+  static async count() {
+    const SQL = "SELECT COUNT(*) as qtdParticipantes FROM PARTICIPANTES";
+    const eventos = await executar_sql(SQL);
+    return eventos[0].qtdParticipantes;
+  }
 
   static async criar_db(participante: ParticipantesModel) {
     const insertParticipanteSQL = `INSERT INTO PARTICIPANTES (PARTICIPANTE_CPF, NOME_PARTICIPANTE, CELULAR_PARTICIPANTE) 
@@ -54,5 +59,11 @@ export class ParticipantesModel implements IParticipantesModel {
     await executar_sql(updateCompromissoSQL);
   }
 
-  static async deletar_db() {}
+  static async deletar_db(cpf: string) {
+    const deleteCompromissoSQL = `DELETE FROM PARTICIPANTE_EVENTO WHERE PARTICIPANTE_CPF = "${cpf}"`;
+    const deleteParticipanteSQL = `DELETE FROM PARTICIPANTES WHERE PARTICIPANTE_CPF = "${cpf}"`;
+
+    await executar_sql(deleteCompromissoSQL);
+    await executar_sql(deleteParticipanteSQL);
+  }
 }
