@@ -8,32 +8,32 @@ Para iniciar o programa no Linux, é necessário ter o banco `SYS_EVENTO` criado
 
 ### Passo 1: Instale o NVM (Node Version Manager)
 
-Execute o seguinte comando no terminal para instalar o NVM:
+- Execute o seguinte comando no terminal para instalar o NVM:
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
 ```
-Com o NVM instalado, instale a versão 20 do Node.js executando:
+- Com o NVM instalado, instale a versão 20 do Node.js executando:
 ```bash
 nvm install 20
 ```
-Para garantir que o Node.js foi instalado corretamente, verifique a versão instalada:
+- Para garantir que o Node.js foi instalado corretamente, verifique a versão instalada:
 ```bash
 node -v
 ```
-Para certificar-se de que o NPM (Node Package Manager) foi instalado corretamente, verifique sua versão:
+- Para certificar-se de que o NPM (Node Package Manager) foi instalado corretamente, verifique sua versão:
 ```bash
 npm -v
 ```
 # Execução do Sistema
-Navegue até a pasta do projeto:
+- Navegue até a pasta do projeto:
 ```bash
 cd /caminho/do/projeto
 ```
-Instale as dependências:
+- Instale as dependências:
 ```bash
 npm i
 ```
-Inicie o sistema:
+- Inicie o sistema:
 ```bash
 npm start
 ```
@@ -117,7 +117,7 @@ npm start
   ```shell
   $ sudo systemctl status mysql
   ```
-  Para finalizar crie o banco de dados executando o comando:
+- Para finalizar crie o banco de dados executando o comando:
   ```shell
   CREATE DATABASE IF NOT EXISTS SYS_EVENTO;
   ```
