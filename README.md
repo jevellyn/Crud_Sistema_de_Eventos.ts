@@ -1,28 +1,59 @@
-# Sistema de Eventos em Python fazendo CRUD no MySQL
+# Sistema de Gerenciamento de Eventos em TypeScript Fazendo Cruz com o MySQL
 
-Esse sistema de eventos é composto por um conjunto de tabelas que representam participantes de eventos, contendo tabelas como: participantes, eventos e participante do evento.
+Esse sistema de eventos é composto por um conjunto de tabelas que representam um sistema de eventos, contendo tabelas como: participantes, eventos e participante do evento.
 
-Para iniciar o programa é necessário ter o banco criado, pois as tabelas serão criadas ao iniciar o sistema.
+Para iniciar o programa no Linux, é necessário ter o banco `SYS_EVENTO` criado, pois as tabelas serão criadas ao iniciar o sistema e o Node.js deve estar instalado.
 
-Para executar o sistema é necessário estar na pasta do sistema e executar o script a seguir (esse comando requer o node):
-```shell
-~$ npm i
+## Instalação do Node:
+
+### Passo 1: Instale o NVM (Node Version Manager)
+
+Execute o seguinte comando no terminal para instalar o NVM:
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
 ```
-Em seguida execute o script a seguir: 
-```shell
-~$ npm start
+Com o NVM instalado, instale a versão 20 do Node.js executando:
+```bash
+nvm install 20
+```
+Para garantir que o Node.js foi instalado corretamente, verifique a versão instalada:
+```bash
+node -v
+```
+Para certificar-se de que o NPM (Node Package Manager) foi instalado corretamente, verifique sua versão:
+```bash
+npm -v
+```
+# Execução do Sistema
+Navegue até a pasta do projeto:
+```bash
+cd /caminho/do/projeto
+```
+Instale as dependências:
+```bash
+npm i
+```
+Inicie o sistema:
+```bash
+npm start
 ```
 
 ## Organização
 - [Diagrama_BD](Diagrama_BD): Nesse diretório está o [diagrama relacional](Diagrama_BD/Eventos.pdf) (lógico) do sistema.
     * O sistema possui três entidades: PARTICIPANTES, PARTICIPANTE_EVENTO E EVENTOS.
-- [sql](sql): Nesse diretório estão os scripts para criação das tabelas e inserção de dados fictícios para testes do sistema
-    * [create_tables_sistema_eventos.sql](sql/create_tables_sistema_eventos.sql): script responsável pela criação das tabelas e relacionamentos.
-    * [insert_tables_sistema_eventos.sql](sql/insert_tables_sistema_eventos.sql): script responsável pela inserção dos registros fictícios para testes do sistema.
+
+- [sql](sql): Nesse diretório estão os scripts para criação das tabelas e inserção de dados fictícios para testes do sistema.
+    * [create_tables_sistema_eventos.sql](sql/create_tables_sistema_eventos.sql): Responsável pela criação das tabelas e relacionamentos.
+    * [insert_tables_sistema_eventos.sql](sql/insert_tables_sistema_eventos.sql): Responsável pela inserção dos registros fictícios para testes do sistema.
+    * [trigger_check_limite.sql](sql/trigger_check_limite.sql): Este *trigger* impede a inserção de novos participantes em um evento quando o limite de capacidade for atingido, exibindo uma mensagem de erro.
+
 - [src](src): Nesse diretório estão os scripts do sistema
+
     * [conexion](src/conexion/): Nesse repositório encontra-se o [módulo de conexão com o banco de dados MySql](src/conexion/connection.ts). 
+
     * [controllers](src/controllers/): Nesse diretório encontram-se as classes controladoras, responsáveis por realizar inserção, alteração e exclusão dos registros das tabelas.
-      - Exemplo de modulo para atualizar evento:
+
+      - Exemplo de módulo para atualizar evento:
 
         ```typescript
         async atualizar_evento() {
@@ -51,16 +82,21 @@ Em seguida execute o script a seguir:
     	}
         ```
     * [models](src/models/): Nesse diretório encontram-se as classes das entidades descritas no [diagrama relacional](Diagrama_BD/Eventos.pdf)
+
     * [reports](src/reports/) Nesse diretório encontram-se as classes responsáveis por gerar todos os relatórios do sistema, [eventos por mês](src/reports/eventosPorMes.ts) e [participantes por evento](src/reports/participantesPorEvento.ts)
+
     * [sql](src/sql/): Nesse diretório encontram-se os scripts utilizados para geração dos relatórios a partir das classes [eventos por mês](src/reports/eventosPorMes.ts) e [participantes por evento](src/reports/participantesPorEvento.ts)
+
     * [utils](src/utils/): Nesse diretório encontram-se os scripts de [configuração](src/utils/menu.ts) e automatização da [tela de informações iniciais](src/utils/splashScreen.ts)
-    * [index.ts](src/index.ts): Script responsável por ser a interface entre o usuário e os módulos de acesso ao Banco de Dados.
+
+    * [index.ts](src/index.ts): Este script implementa a função principal do sistema, gerencia a conexão com o banco de dados, exibe um menu interativo para o usuário e processa as escolhas, até que ele opte por encerrar o sistema.
 
 ### Bibliotecas Utilizadas
-- [package.json](package.json): este é o arquivo contendo as dependências.
+- [package.json](package.json): Este é o arquivo contendo as dependências.
 
 ### Instalando o MySQL
 - A versão do Banco de Dados utilizada já vem disponível no repositório padrão do Ubuntu e Mint.
+
 - Antes de instalar o MySQL, abra o terminal e atualiza o cache do repositório apt
   ```shell
   $ sudo apt update
@@ -75,12 +111,17 @@ Em seguida execute o script a seguir:
   ```
 - Após instalar, verifique a instalação e versão com o comando
   ```shell
-  $ mysql --Version
+  $ mysql --version
   ```
 - O servidor será iniciado automaticamente. Verifique o status com o comando: 
   ```shell
   $ sudo systemctl status mysql
   ```
+  Para finalizar crie o banco de dados executando o comando:
+  ```shell
+  CREATE DATABASE IF NOT EXISTS SYS_EVENTO;
+  ```
+
 
 ## Criado por:
 - Julia Evellyn
