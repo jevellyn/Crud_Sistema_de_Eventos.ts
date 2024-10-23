@@ -122,6 +122,9 @@ npm start
   CREATE DATABASE IF NOT EXISTS SYS_EVENTO;
   ```
 
+## Apresentação do sistema
+- Dentro da pasta [Link para o vídeo](Link_para_o_vídeo) encontrasse o [link](Link_para_o_vídeo/link.txt) de apresentação do sistema.
+
 
 ## Criado por:
 - Julia Evellyn
