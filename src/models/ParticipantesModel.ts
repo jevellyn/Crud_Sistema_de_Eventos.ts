@@ -1,69 +1,130 @@
-import { executar_sql } from "../conexion/connection";
+import { db } from "../conexion/connection";
 
 interface IParticipantesModel {
-  cpf: string;
-  nome: string;
-  celular: string;
-  IDEvento: number;
+    cpf: string;
+    nome: string;
+    celular: string;
+    IDEvento: string;
+  }
+  
+  export class ParticipantesModel implements IParticipantesModel {
+    IDEvento: string;
+    cpf: string;
+    nome: string;
+    celular: string;
+  
+    constructor(participante: IParticipantesModel) {
+        this.IDEvento = participante.IDEvento;
+        this.cpf = participante.cpf;
+        this.nome = participante.nome;
+        this.celular = participante.celular;
+      }
+
+    static async listar_db() {
+        try {
+          const collection = db.collection('participantes');
+          const participante = await collection.find().toArray();
+          console.table(participante);
+        } catch (error) {
+          console.error('Erro ao listar participantes:', error);
+        }
+    }
+
+    static async listar_compromisso(cpf: string) {
+        try {
+          const collection = db.collection('participante_evento');
+    
+          const compromissos = await collection.find({ cpf: cpf }).toArray();
+    
+          return compromissos;
+        } catch (error) {
+          console.error('Erro ao listar compromissos:', error);
+          throw error;
+        }
+      }
+
+      static async count() {
+        try {
+          const collection = db.collection('participantes');
+          const qtdParticipantes = await collection.countDocuments();
+    
+          return qtdParticipantes;
+        } catch (error) {
+          console.error('Erro ao contar participantes:', error);
+          throw error;
+        }
+      }
+
+      static async criar_db(participante: ParticipantesModel) {
+        try {
+          const collection = db.collection('participantes');
+
+          const resultado = await collection.insertOne({
+            cpf: participante.cpf,
+            nome: participante.nome,
+            celular: participante.celular
+          });
+
+          const insertcollection = db.collection('participante_evento');
+          console.log(participante)
+     
+          const resultadoCompromisso = await insertcollection.insertOne({
+            eventoId: participante.IDEvento,
+            cpf: participante.cpf
+          });
+    
+          console.log('Participante criado com sucesso:', resultado.insertedId);
+          return resultado.insertedId;
+        } catch (error) {
+          const a = error as any
+          console.error('Erro ao criar participante:', a.errorResponse.errInfo.details.schemaRulesNotSatisfied);
+          throw error;
+        }
+      }
+      
+      static async atualizar_db(participante: ParticipantesModel) {
+        try {
+          const participantesCollection = db.collection('participantes');
+          const compromissosCollection = db.collection('participante_evento');
+    
+          await participantesCollection.updateOne(
+            { cpf: participante.cpf }, 
+            {
+              $set: {
+                nome: participante.nome,
+                celular: participante.celular
+              }
+            }
+          );
+    
+          await compromissosCollection.updateOne(
+            { cpf: participante.cpf }, 
+            {
+              $set: { eventoId: participante.IDEvento }
+            }
+          );
+    
+          console.log('Participante e compromisso atualizados com sucesso!');
+        } catch (error) {
+          console.error('Erro ao atualizar participante e compromisso:', error);
+          throw error;
+        }
+      }
+
+      static async deletar_db(cpf: string) {
+        try {
+          const participantesCollection = db.collection('participantes');
+          const compromissosCollection = db.collection('participante_evento');
+    
+          await compromissosCollection.deleteMany({ cpf: cpf });
+    
+          await participantesCollection.deleteOne({ cpf: cpf });
+    
+          console.log('Participante e compromissos deletados com sucesso!');
+        } catch (error) {
+          console.error('Erro ao deletar participante e compromissos:', error);
+          throw error;
+        }
+      }
 }
-
-export class ParticipantesModel implements IParticipantesModel {
-  IDEvento: number;
-  cpf: string;
-  nome: string;
-  celular: string;
-
-  constructor(participante: IParticipantesModel) {
-    Object.assign(this, participante);
-  }
-
-  static async listar_db() {
-    const SQL = "SELECT * FROM PARTICIPANTES";
-    const eventos = await executar_sql(SQL);
-    console.table(eventos);
-  }
-
-  static async listar_compromisso(cpf: string) {
-    const SQL = `SELECT * FROM participante_evento WHERE PARTICIPANTE_CPF = "${cpf}"`;
-    const eventos = await executar_sql(SQL);
-    return eventos;
-  }
-
-  static async count() {
-    const SQL = "SELECT COUNT(*) as qtdParticipantes FROM PARTICIPANTES";
-    const eventos = await executar_sql(SQL);
-    return eventos[0].qtdParticipantes;
-  }
-
-  static async criar_db(participante: ParticipantesModel) {
-    const insertParticipanteSQL = `INSERT INTO PARTICIPANTES (PARTICIPANTE_CPF, NOME_PARTICIPANTE, CELULAR_PARTICIPANTE) 
-                                  VALUES("${participante.cpf}", "${participante.nome}", "${participante.celular}")`;
-
-    const insertCompromissoSQL = `INSERT INTO PARTICIPANTE_EVENTO (EVENTO_ID, PARTICIPANTE_CPF) 
-                                  VALUES(${participante.IDEvento}, "${participante.cpf}")`;
-
-    await executar_sql(insertParticipanteSQL);
-    await executar_sql(insertCompromissoSQL);
-  }
-
-  static async atualizar_db(participante: ParticipantesModel) {
-    const updateParticipanteSQL = `UPDATE PARTICIPANTES SET
-                                    NOME_PARTICIPANTE = "${participante.nome}", 
-                                    CELULAR_PARTICIPANTE = "${participante.celular}"
-                                  WHERE PARTICIPANTE_CPF = ${participante.cpf}`;
-
-    const updateCompromissoSQL = `UPDATE PARTICIPANTE_EVENTO SET EVENTO_ID = ${participante.IDEvento}
-                                  WHERE PARTICIPANTE_CPF = "${participante.cpf}"`;
-
-    await executar_sql(updateParticipanteSQL);
-    await executar_sql(updateCompromissoSQL);
-  }
-
-  static async deletar_db(cpf: string) {
-    const deleteCompromissoSQL = `DELETE FROM PARTICIPANTE_EVENTO WHERE PARTICIPANTE_CPF = "${cpf}"`;
-    const deleteParticipanteSQL = `DELETE FROM PARTICIPANTES WHERE PARTICIPANTE_CPF = "${cpf}"`;
-
-    await executar_sql(deleteCompromissoSQL);
-    await executar_sql(deleteParticipanteSQL);
-  }
-}
+  

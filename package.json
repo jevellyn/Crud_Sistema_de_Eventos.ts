@@ -4,17 +4,19 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/index.js"
+    "start": "npm run build && node dist/src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "mongodb": "^6.11.0",
     "mysql2": "^3.11.3",
     "prompt-sync": "^4.2.0"
   },
   "devDependencies": {
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^22.7.7",
     "@types/prompt-sync": "^4.2.3",
     "typescript": "^5.6.3"

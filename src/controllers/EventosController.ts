@@ -12,7 +12,7 @@ export class EventosController {
     const duracao = prompt("Duração: ");
 
     const novoEvento = new EventosModel({
-      dataEvento: data,
+      dataEvento: new Date(data),
       descricao: descricao,
       duracaoEvento: duracao,
       limiteParticipantes: limite,
@@ -28,7 +28,7 @@ export class EventosController {
 
     console.log("Digite os dados para atualizar o evento:\n");
 
-    const IDEvento = +prompt("Id do evento: ");
+    const IDEvento = prompt("Id do evento: ");
     const descricao = prompt("Descrição: ");
     const tipo = prompt("Tipo: ");
     const data = prompt("Data evento(yyyy-MM-dd): ");
@@ -37,7 +37,7 @@ export class EventosController {
 
     const novoEvento = new EventosModel({
       IDEvento: IDEvento,
-      dataEvento: data,
+      dataEvento: new Date(data),
       descricao: descricao,
       duracaoEvento: duracao,
       limiteParticipantes: limite,
@@ -53,7 +53,7 @@ export class EventosController {
 
     console.log("Digite o ID do evento para excluir:\n");
 
-    const IDEvento = +prompt("ID: ");
+    const IDEvento = prompt("ID: ");
 
     const compromissos = await EventosModel.listar_compromisso(IDEvento);
 

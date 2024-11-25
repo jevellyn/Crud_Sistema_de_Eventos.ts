@@ -12,7 +12,7 @@ export class ParticipantesController {
       const cpf = prompt("CPF: ");
       const nome = prompt("Nome: ");
       const celular = prompt("Celular: ");
-      const IDEvento = +prompt("ID do evento: ");
+      const IDEvento = prompt("ID do evento: ");
 
       const novoParticipante = new ParticipantesModel({
         IDEvento,
@@ -37,7 +37,7 @@ export class ParticipantesController {
     const cpf = prompt("CPF do participante: ");
     const nome = prompt("Nome: ");
     const celular = prompt("Celular: ");
-    const IDEvento = +prompt("ID do evento: ");
+    const IDEvento = prompt("ID do evento: ");
 
     const novoParticipante = new ParticipantesModel({
       IDEvento,

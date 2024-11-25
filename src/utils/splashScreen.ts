@@ -18,8 +18,8 @@ export async function splashScreen() {
 *   Julia Evellyn
 *   Ana Clara Alves
 *   Ezequiel Soeiro Gomes
-*   Ian Rodrigues
-*   Kauã Fonseca
+*   
+*   
 * 
 * 
 * PROFESSOR: Prof. M.Sc. Howard Roatti

@@ -1,5 +1,5 @@
 import { setTimeout } from "timers/promises";
-import { connectDb, disconnectDb } from "./conexion/connection";
+import { connectDb } from "./conexion/connection";
 import { Menu } from "./utils/menu";
 import { prompt } from "./utils/prompt";
 
@@ -21,7 +21,6 @@ async function main() {
     }
 
     if (escolha === 5) {
-      disconnectDb();
       console.log("\nOBRIGADO POR UTILIZAR NOSSO SISTEMA\n");
       break;
     }

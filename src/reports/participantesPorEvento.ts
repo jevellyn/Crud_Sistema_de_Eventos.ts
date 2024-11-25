@@ -1,13 +1,31 @@
-import { readFileSync } from "fs";
-import { executar_sql } from "../conexion/connection";
+import { connectToDatabase, db } from "../conexion/connection";
 
-export async function participantesPorEvento() {
-  const relatorioSQL = readFileSync(
-    "src/sql/rel_numero_participantes_por_evento.sql",
-    "utf-8"
-  );
+export const participantesPorEvento = async () => {
+    await connectToDatabase(); 
 
-  const relatorioResult = await executar_sql(relatorioSQL);
+    const pipeline = [
+        {
+            $lookup: {
+                from: "participante_evento", 
+                localField: "eventoId", 
+                foreignField: "eventoId", 
+                as: "participantes" 
+            }
+        },
+        {
+            $group: {
+                _id: "$tipoEvento", 
+                total_participantes: { $sum: { $size: "$participantes" } } 
+            }
+        },
+        {
+            $sort: { _id: 1 }
+        }
+    ];
 
-  console.table(relatorioResult);
-}
+    const collection = db.collection("eventos"); 
+    const result = await collection.aggregate(pipeline).toArray();
+    console.table(result)
+
+};
+

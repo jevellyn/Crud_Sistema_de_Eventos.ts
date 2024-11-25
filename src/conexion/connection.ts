@@ -1,45 +1,34 @@
-import { readFileSync } from "fs";
-import mysql from "mysql2";
+import { readFileSync } from "fs"; 
+import { MongoClient, Db } from "mongodb";
+import { createCollections } from "../../mongo/create_collections_sistema_eventos";
+import { insertEventos } from "../../mongo/insert_sistema_eventos";
 
-const connection = mysql.createConnection({
-  host: "192.168.13.250",
-  port: 3306,
-  user: "admin",
-  database: "SYS_EVENTO",
-  password: "4t8zzgssx8uk2s9",
-  multipleStatements: true,
-});
+const uri = "mongodb://localhost:27017/"; // Substitua pelo seu URI de conexão
+const dbName = "SYS_EVENTO"; // Nome do banco de dados
 
-export async function executar_sql(sql: string): Promise<any> {
-  return await new Promise((resolve, reject) => {
-    connection.query(sql, (error, result) => {
-      if (error) {
-        return reject(error);
-      } else {
-        return resolve(result);
-      }
-    });
-  });
-}
+export let db: Db;
 
-export async function connectDb() {
-  connection.connect();
+export const connectToDatabase = async (): Promise<Db> => {
+  if (!db) {
+    try {
+      const client = new MongoClient(uri);
+      await client.connect();
+      console.log("Conectado ao MongoDB!");
+      db = client.db(dbName); // Seleciona o banco de dados
+    } catch (error) {
+      console.error("Erro ao conectar ao MongoDB:", error);
+      throw error;
+    }
+  }
+  return db;
+};
 
-  const createTablesSQL = readFileSync(
-    "sql/create_tables_sistema_eventos.sql",
-    "utf-8"
-  );
-  const populateTablesSQL = readFileSync(
-    "sql/insert_tables_sistema_eventos.sql",
-    "utf-8"
-  );
-  const createTrigger = readFileSync("sql/trigger_check_limite.sql", "utf-8")
+export async function connectDb(){
+  await connectToDatabase();
 
-  await executar_sql(createTablesSQL);
-  await executar_sql(populateTablesSQL);
-  await executar_sql(createTrigger);
-}
 
-export function disconnectDb() {
-  connection.end();
-}
+  await createCollections(db)
+  await insertEventos(db)
+
+  console.log("Banco de dados pronto para operações."); 
+} 
