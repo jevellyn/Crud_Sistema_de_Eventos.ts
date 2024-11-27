@@ -2,7 +2,7 @@
 
 Esse sistema de eventos é composto por um conjunto de tabelas que representam um sistema de eventos, contendo tabelas como: participantes, eventos e participante do evento.
 
-Para iniciar o programa no Linux, é necessário ter o banco `SYS_EVENTO` criado, pois as tabelas serão criadas ao iniciar o sistema e o Node.js deve estar instalado.
+Para iniciar o programa no Linux, é necessário ter o Node.js deve estar instalado.
 
 ## Instalação do Node:
 
@@ -42,14 +42,13 @@ npm start
 - [Diagrama_BD](Diagrama_BD): Nesse diretório está o [diagrama relacional](Diagrama_BD/Eventos.pdf) (lógico) do sistema.
     * O sistema possui três entidades: PARTICIPANTES, PARTICIPANTE_EVENTO E EVENTOS.
 
-- [sql](sql): Nesse diretório estão os scripts para criação das tabelas e inserção de dados fictícios para testes do sistema.
-    * [create_tables_sistema_eventos.sql](sql/create_tables_sistema_eventos.sql): Responsável pela criação das tabelas e relacionamentos.
-    * [insert_tables_sistema_eventos.sql](sql/insert_tables_sistema_eventos.sql): Responsável pela inserção dos registros fictícios para testes do sistema.
-    * [trigger_check_limite.sql](sql/trigger_check_limite.sql): Este *trigger* impede a inserção de novos participantes em um evento quando o limite de capacidade for atingido, exibindo uma mensagem de erro.
+- [mongo](mongo): Nesse diretório estão os scripts para criação das tabelas e inserção de dados fictícios para testes do sistema.
+    * [create_collections_sistema_eventos.ts](mongo\create_collections_sistema_eventos.ts): Responsável pela criação das tabelas e relacionamentos.
+    * [insert_sistema_eventos.ts](mongo\insert_sistema_eventos.ts): Responsável pela inserção dos registros fictícios para testes do sistema.
 
 - [src](src): Nesse diretório estão os scripts do sistema
 
-    * [conexion](src/conexion/): Nesse repositório encontra-se o [módulo de conexão com o banco de dados MySql](src/conexion/connection.ts). 
+    * [conexion](src/conexion/): Nesse repositório encontra-se o [módulo de conexão com o banco de dados MongoDb](src/conexion/connection.ts). 
 
     * [controllers](src/controllers/): Nesse diretório encontram-se as classes controladoras, responsáveis por realizar inserção, alteração e exclusão dos registros das tabelas.
 
@@ -57,35 +56,33 @@ npm start
 
         ```typescript
         async atualizar_evento() {
-        	await EventosModel.listar_db();
+          await EventosModel.listar_db();
 
-        	console.log("Digite os dados para atualizar o evento:\n");
+          console.log("Digite os dados para atualizar o evento:\n");
 
-        	const IDEvento = +prompt("Id do evento: ");
-        	const descricao = prompt("Descrição: ");
-        	const tipo = prompt("Tipo: ");
-        	const data = prompt("Data evento(yyyy-MM-dd): ");
-        	const limite = +prompt("Limite de participantes: ");
-        	const duracao = prompt("Duração: ");
+          const IDEvento = prompt("Id do evento: ");
+          const descricao = prompt("Descrição: ");
+          const tipo = prompt("Tipo: ");
+          const data = prompt("Data evento(yyyy-MM-dd): ");
+          const limite = +prompt("Limite de participantes: ");
+          const duracao = prompt("Duração: ");
 
-        	const novoEvento = new EventosModel({
-            		IDEvento: IDEvento,
-            		dataEvento: data,
-            		descricao: descricao,
-            		duracaoEvento: duracao,
-            		limiteParticipantes: limite,
-            		tipoEvento: tipo,
-        	});
+          const novoEvento = new EventosModel({
+            IDEvento: IDEvento,
+            dataEvento: new Date(data),
+            descricao: descricao,
+            duracaoEvento: duracao,
+            limiteParticipantes: limite,
+            tipoEvento: tipo,
+          });
 
-        await EventosModel.atualizar_db(novoEvento);
-        	await EventosModel.listar_db();
-    	}
+          await EventosModel.atualizar_db(novoEvento);
+          await EventosModel.listar_db();
+        }
         ```
     * [models](src/models/): Nesse diretório encontram-se as classes das entidades descritas no [diagrama relacional](Diagrama_BD/Eventos.pdf)
 
     * [reports](src/reports/) Nesse diretório encontram-se as classes responsáveis por gerar todos os relatórios do sistema, [eventos por mês](src/reports/eventosPorMes.ts) e [participantes por evento](src/reports/participantesPorEvento.ts)
-
-    * [sql](src/sql/): Nesse diretório encontram-se os scripts utilizados para geração dos relatórios a partir das classes [eventos por mês](src/reports/eventosPorMes.ts) e [participantes por evento](src/reports/participantesPorEvento.ts)
 
     * [utils](src/utils/): Nesse diretório encontram-se os scripts de [configuração](src/utils/menu.ts) e automatização da [tela de informações iniciais](src/utils/splashScreen.ts)
 
@@ -95,31 +92,31 @@ npm start
 - [package.json](package.json): Este é o arquivo contendo as dependências.
 
 ### Instalando o MySQL
-- A versão do Banco de Dados utilizada já vem disponível no repositório padrão do Ubuntu e Mint.
+- O MongoDB pode ser instalado a partir do repositório oficial do MongoDB para garantir que você obtenha a versão mais recente.
 
-- Antes de instalar o MySQL, abra o terminal e atualiza o cache do repositório apt
+- Adicione a chave GPG pública para garantir que os pacotes baixados sejam autênticos:
+  ```shell
+  $ curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
+  ```
+- Adicione o repositório oficial do MongoDB ao seu sistema:
+  ```shell
+  echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+  ```
+- Atualize a lista de pacotes para incluir os do MongoDB:
   ```shell
   $ sudo apt update
   ```
-- Em seguida, instale o servidor MySQL com o comando:
+- Instale o MongoDB com o seguinte comando:
   ```shell
-  $ sudo apt install mysql-server
+  $ sudo apt install mongodb-org
   ```
-- Digite "Y" para continuar com a instalação
+- Digite "Y" para confirmar a instalação: 
   ```shell
   Do you want to continue? [Y/n]
   ```
-- Após instalar, verifique a instalação e versão com o comando
+- Após a instalação, confirme se o MongoDB foi instalado corretamente e exiba a versão:
   ```shell
-  $ mysql --version
-  ```
-- O servidor será iniciado automaticamente. Verifique o status com o comando: 
-  ```shell
-  $ sudo systemctl status mysql
-  ```
-- Para finalizar crie o banco de dados executando o comando:
-  ```shell
-  CREATE DATABASE IF NOT EXISTS SYS_EVENTO;
+  $ mongod --version
   ```
 
 
@@ -127,9 +124,6 @@ npm start
 - Julia Evellyn
 - Ana Clara Alves
 - Ezequiel Soeiro Gomes
-- Gabriel Silva Herculino
-- Ian Rodrigues da Silva
-- Kauã Fonseca Silva
 
 ## Professor:
 - Prof. M.Sc. Howard Roatti
