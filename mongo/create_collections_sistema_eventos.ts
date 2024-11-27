@@ -40,7 +40,7 @@ export async function createCollections(db:Db) {
         required: ["eventoId", "cpf"],
         properties: {
           eventoId: {
-            bsonType: "string",
+            bsonType: "objectId",
             description: "ID do evento (referência à coleção eventos)",
           },
           cpf: {

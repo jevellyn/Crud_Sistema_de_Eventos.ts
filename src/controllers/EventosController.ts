@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { EventosModel } from "../models/EventosModel";
 import { prompt } from "../utils/prompt";
 
