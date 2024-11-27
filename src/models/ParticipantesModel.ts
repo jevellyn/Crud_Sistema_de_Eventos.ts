@@ -81,14 +81,14 @@ interface IParticipantesModel {
           });
 
           const insertcollection = db.collection('participante_evento');
-          console.log(participante)
+          //console.log(participante)
      
           const resultadoCompromisso = await insertcollection.insertOne({
             eventoId: new ObjectId (participante.IDEvento),
             cpf: participante.cpf
           });
     
-          console.log('/nParticipante criado com sucesso:', resultado.insertedId);
+          console.log('\nParticipante criado com sucesso:', resultado.insertedId);
           return resultado.insertedId;
         } catch (error) {
           const a = error as any
