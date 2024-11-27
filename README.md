@@ -1,4 +1,4 @@
-# Sistema de Gerenciamento de Eventos em TypeScript Fazendo Crud com o MySQL
+# Sistema de Gerenciamento de Eventos em TypeScript Fazendo Crud com MongoDb
 
 Esse sistema de eventos é composto por um conjunto de tabelas que representam um sistema de eventos, contendo tabelas como: participantes, eventos e participante do evento.
 
