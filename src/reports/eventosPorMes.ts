@@ -1,4 +1,4 @@
-import { table } from "console";
+
 import { connectToDatabase, db } from "../conexion/connection";
 
 const pipeline = [

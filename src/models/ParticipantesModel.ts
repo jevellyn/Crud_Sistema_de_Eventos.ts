@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { db } from "../conexion/connection";
 
 interface IParticipantesModel {
@@ -58,6 +59,20 @@ interface IParticipantesModel {
       static async criar_db(participante: ParticipantesModel) {
         try {
           const collection = db.collection('participantes');
+          const eventoCollection = db.collection('participante_evento');
+          const eventos = db.collection('eventos');
+
+          const numeroDeParticipantes = await eventoCollection.countDocuments({ eventoId: participante.IDEvento });
+    
+
+          const evento = await db.collection('eventos').findOne({_id: new ObjectId(participante.IDEvento)});
+          
+          const limiteParticipantes = evento?.limiteParticipantes || 0;
+
+          if (numeroDeParticipantes >= limiteParticipantes) {
+            console.log('O evento já atingiu o limite de participantes.');
+            return
+          }
 
           const resultado = await collection.insertOne({
             cpf: participante.cpf,
@@ -66,18 +81,18 @@ interface IParticipantesModel {
           });
 
           const insertcollection = db.collection('participante_evento');
-          console.log(participante)
+          //console.log(participante)
      
           const resultadoCompromisso = await insertcollection.insertOne({
             eventoId: participante.IDEvento,
             cpf: participante.cpf
           });
     
-          console.log('Participante criado com sucesso:', resultado.insertedId);
+          console.log('/nParticipante criado com sucesso:', resultado.insertedId);
           return resultado.insertedId;
         } catch (error) {
           const a = error as any
-          console.error('Erro ao criar participante:', a.errorResponse.errInfo.details.schemaRulesNotSatisfied);
+          console.error('Erro ao criar participante');
           throw error;
         }
       }
