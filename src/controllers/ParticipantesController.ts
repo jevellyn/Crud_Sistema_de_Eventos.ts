@@ -62,7 +62,7 @@ export class ParticipantesController {
     if (compromissos.length > 0) {
       console.log("Esse participante está em um evento!!!");
 
-      const escolha = +prompt("Desaja realmente exluir? [1- SIM | 2- NÃO]: ");
+      const escolha = +prompt("Deseja realmente exluir? [1- SIM | 2- NÃO]: ");
 
       if (escolha !== 1) return;
     }

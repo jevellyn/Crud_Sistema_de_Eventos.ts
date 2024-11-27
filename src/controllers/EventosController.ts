@@ -59,8 +59,8 @@ export class EventosController {
 
     if (compromissos.length > 0) {
       return console.log("Existe participantes para esse evento!!!");
-    }
 
+    }
     await EventosModel.deletar_db(IDEvento);
     await EventosModel.listar_db();
   }

@@ -37,11 +37,11 @@ export class EventosModel implements IEventosModel {
         }
     }
 
-    static async listar_compromisso(IDEvento: string) {
+    static async listar_compromisso(eventoId: string) {
         try {
           const collection = db.collection('participante_evento');
     
-          const participantes = await collection.find({IDEvento}).toArray();
+          const participantes = await collection.find({eventoId}).toArray();
     
           return participantes;
         } catch (error) {

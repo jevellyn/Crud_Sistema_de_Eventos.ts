@@ -12,7 +12,8 @@ export const participantesPorEvento = async () => {
             $lookup: {
                 from: "participante_evento", 
                 localField: "_id",  
-                foreignField: {eventoId: new ObjectId("eventoId")}, 
+                foreignField: "eventoId", 
+                as: "participantes"
             }
         },
         {
